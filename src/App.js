@@ -1,39 +1,64 @@
+import React, { useState, useMemo, useEffect } from 'react';
 import { Route, Switch } from 'react-router-dom';
+import { setItem, getItem } from './utils';
 import PageNotFound from './components/PageNotFound';
-import Leads, { Lead } from './components/Leads';
+import Leads, { Lead } from './components/leads/Leads';
 import Home from './components/Home';
-import Navigation from './components/Navigation';
+import Navigation from './components/navigation/Navigation';
 import './App.css';
 
 
+const app = {
+    leads: [],
+    addLead: () => {},
+    removeLead: () => {},
+    editLead: () => {},
+}
+
+export const LeadsContext = React.createContext(app);
+
+
 function App() {
-  return <div className='App'>
-      <Navigation />
+    const [leads, setLeads] = useState(getItem('leads') || []);
 
-      <Switch>
-          <Route
-              path='/'
-              exact
-              component={Home}
-          />
+    const value = useMemo(() => ({
+        leads,
+        addLead: setLeads,
+        removeLead: setLeads,
+        editLead: setLeads
+    }), [leads, setLeads]);
 
-          <Route
-              path='/leads/:id'
-              exact
-              component={Lead}
-          />
+    useEffect(() => setItem('leads', leads), [leads]);
 
-          <Route
-              path='/leads'
-              exact
-              component={Leads}
-          />
+    return <div className='App'>
+        <LeadsContext.Provider value={value} >
+            <Navigation />
 
-          <Route
-              path='*'
-              component={PageNotFound}
-          />
-      </Switch>
+            <Switch>
+                <Route
+                    path='/'
+                    exact
+                    component={Home}
+                />
+
+                <Route
+                    path='/leads/:id'
+                    exact
+                    component={Lead}
+                />
+
+                <Route
+                    path='/leads'
+                    exact
+                    component={Leads}
+                />
+
+                <Route
+                    path='*'
+                    component={PageNotFound}
+                />
+            </Switch>
+        </LeadsContext.Provider>
 
     </div>;
 }

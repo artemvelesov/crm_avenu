@@ -1,0 +1,12 @@
+.nav {
+    display: flex;
+    flex: 1;
+    background: #cccccc;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+}
+
+.item {
+    margin: 0 5px;
+}

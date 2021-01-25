@@ -1,24 +1,13 @@
+import { useContext } from 'react';
+import { LeadsContext } from '../App';
 import { Link, useParams } from 'react-router-dom';
+import { Card } from '@material-ui/core';
 
-const leads = [
-    {
-        id: 1,
-        title: 'Иванов Сергей',
-        status: 'todo',
-        phone: '79998887766'
-    },
-    {
-        id: 2,
-        title: 'Cтепан Суровый',
-        status: 'todo',
-        phone: '79998887755'
-    }
-]
 
 export function Lead() {
-    const { id } = useParams(),
+    const { leads } = useContext(LeadsContext),
+        { id } = useParams(),
         lead = leads.find(item => item.id === Number(id));
-
 
     return <div>
         <div>
@@ -28,12 +17,16 @@ export function Lead() {
 }
 
 function Leads() {
+    const { leads } = useContext(LeadsContext);
+
     return <div>
         {leads.map( ({ id, title, status, phone }) => <div key={id}>
-            <Link to={`/leads/${id}`}>
-                <div>id: {id} - {title} ({status})</div>
-                <div>{phone}</div>
-            </Link>
+            <Card>
+                <Link to={`/leads/${id}`}>
+                    <div>id: {id} - {title} ({status})</div>
+                    <div>{phone}</div>
+                </Link>
+            </Card>
         </div>)}
     </div>;
 };
